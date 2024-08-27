@@ -34,7 +34,7 @@ concurrency:
 
 jobs:
   Fetch-Source:
-    runs-on: [self-hosted]
+    runs-on: [self-hosted, macOS]
     steps:
       - name: Determine Target Branches
         id: gittargets
@@ -117,7 +117,7 @@ jobs:
 
   Linux:
     needs: Fetch-Source
-    runs-on: [self-hosted]
+    runs-on: [self-hosted, Linux]
     env:
       DOCKER_BUILDKIT: 1
 
@@ -175,7 +175,7 @@ jobs:
   macOS:
     permissions:
       contents: none
-    runs-on: [self-hosted]
+    runs-on: [self-hosted, macOS]
     needs: Fetch-Source
     strategy:
       matrix:
@@ -222,7 +222,7 @@ jobs:
 
   msys2:
     needs: Fetch-Source
-    runs-on: [self-hosted]
+    runs-on: [self-hosted, Windows]
     strategy:
       fail-fast: false
       matrix:
