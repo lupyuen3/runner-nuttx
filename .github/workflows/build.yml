@@ -115,63 +115,63 @@ jobs:
           name: source-bundle
           path: sources.tar.gz
 
-  Linux:
-    needs: Fetch-Source
-    runs-on: [self-hosted, Linux, ARM64]
-    env:
-      DOCKER_BUILDKIT: 1
+  #### TODO: Needs Linux x64 because of Docker
+  # Linux:
+  #   needs: Fetch-Source
+  #   runs-on: [self-hosted, Linux, X64]
+  #   env:
+  #     DOCKER_BUILDKIT: 1
 
-    strategy:
-      matrix:
-        # boards: [arm-01, arm-02, arm-03, arm-04, arm-05, arm-06, arm-07, arm-08, arm-09, arm-10, arm-11, arm-12, arm-13, other, risc-v-01, risc-v-02, sim-01, sim-02, xtensa-01, xtensa-02]
-        boards: [sim-01, sim-02]
+  #   strategy:
+  #     matrix:
+  #       boards: [arm-01, arm-02, arm-03, arm-04, arm-05, arm-06, arm-07, arm-08, arm-09, arm-10, arm-11, arm-12, arm-13, other, risc-v-01, risc-v-02, sim-01, sim-02, xtensa-01, xtensa-02]
 
-    steps:
-      - name: Download Source Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: source-bundle
-          path: .
+  #   steps:
+  #     - name: Download Source Artifact
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: source-bundle
+  #         path: .
 
-      - name: Extract sources
-        run: tar zxf sources.tar.gz
+  #     - name: Extract sources
+  #       run: tar zxf sources.tar.gz
 
-      - name: Docker Login
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+  #     - name: Docker Login
+  #       uses: docker/login-action@v3
+  #       with:
+  #         registry: ghcr.io
+  #         username: ${{ github.actor }}
+  #         password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Docker Pull
-        run: docker pull ghcr.io/apache/nuttx/apache-nuttx-ci-linux
+  #     - name: Docker Pull
+  #       run: docker pull ghcr.io/apache/nuttx/apache-nuttx-ci-linux
 
-      - name: Export NuttX Repo SHA
-        run: echo "nuttx_sha=`git -C sources/nuttx rev-parse HEAD`" >> $GITHUB_ENV
+  #     - name: Export NuttX Repo SHA
+  #       run: echo "nuttx_sha=`git -C sources/nuttx rev-parse HEAD`" >> $GITHUB_ENV
 
-      - name: Run builds
-        uses: ./sources/nuttx/.github/actions/ci-container
-        env:
-          BLOBDIR: /tools/blobs
-        with:
-          run: |
-            echo "::add-matcher::sources/nuttx/.github/gcc.json"
-            export ARTIFACTDIR=`pwd`/buildartifacts
-            git config --global --add safe.directory /github/workspace/sources/nuttx
-            git config --global --add safe.directory /github/workspace/sources/apps
-            cd sources/nuttx/tools/ci
-            if [ "X${{matrix.boards}}" = "Xcodechecker" ]; then
-                ./cibuild.sh -c -A -N -R --codechecker testlist/${{matrix.boards}}.dat
-            else
-                ./cibuild.sh -c -A -N -R testlist/${{matrix.boards}}.dat
-            fi
+  #     - name: Run builds
+  #       uses: ./sources/nuttx/.github/actions/ci-container
+  #       env:
+  #         BLOBDIR: /tools/blobs
+  #       with:
+  #         run: |
+  #           echo "::add-matcher::sources/nuttx/.github/gcc.json"
+  #           export ARTIFACTDIR=`pwd`/buildartifacts
+  #           git config --global --add safe.directory /github/workspace/sources/nuttx
+  #           git config --global --add safe.directory /github/workspace/sources/apps
+  #           cd sources/nuttx/tools/ci
+  #           if [ "X${{matrix.boards}}" = "Xcodechecker" ]; then
+  #               ./cibuild.sh -c -A -N -R --codechecker testlist/${{matrix.boards}}.dat
+  #           else
+  #               ./cibuild.sh -c -A -N -R testlist/${{matrix.boards}}.dat
+  #           fi
 
-      - uses: actions/upload-artifact@v4
-        if: ${{ always() }}
-        with:
-          name: linux-${{matrix.boards}}-builds
-          path: buildartifacts/
-        continue-on-error: true
+  #     - uses: actions/upload-artifact@v4
+  #       if: ${{ always() }}
+  #       with:
+  #         name: linux-${{matrix.boards}}-builds
+  #         path: buildartifacts/
+  #       continue-on-error: true
 
   macOS:
     permissions:
