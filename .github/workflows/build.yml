@@ -176,7 +176,7 @@ jobs:
   macOS:
     permissions:
       contents: none
-    runs-on: [self-hosted, macOS, X64]
+    runs-on: [self-hosted, macOS, ARM64]
     needs: Fetch-Source
     strategy:
       matrix:
