@@ -15,7 +15,7 @@ jobs:
       contents: read  # for actions/checkout to fetch code
       statuses: write  # for github/super-linter to mark status of each linter run
     name: Lint
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS, ARM64]
     steps:
       - uses: actions/checkout@v4
         with:
