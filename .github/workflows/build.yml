@@ -34,7 +34,7 @@ concurrency:
 
 jobs:
   Fetch-Source:
-    runs-on: [self-hosted, macOS]
+    runs-on: [self-hosted, macOS, ARM64]
     steps:
       - name: Determine Target Branches
         id: gittargets
