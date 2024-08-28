@@ -34,7 +34,7 @@ concurrency:
 
 jobs:
   Fetch-Source:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS, ARM64]
     steps:
       - name: Determine Target Branches
         id: gittargets
@@ -117,7 +117,7 @@ jobs:
 
   Linux:
     needs: Fetch-Source
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, X64]
     env:
       DOCKER_BUILDKIT: 1
 
@@ -175,7 +175,7 @@ jobs:
   macOS:
     permissions:
       contents: none
-    runs-on: macos-13
+    runs-on: [self-hosted, macOS, ARM64]
     needs: Fetch-Source
     strategy:
       matrix:
@@ -204,9 +204,10 @@ jobs:
 
       # Released version of Cython has issues with Python 11. Set runner to use Python 3.10
       # https://github.com/cython/cython/issues/4500
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
+      # TODO: This hangs on macOS Arm64
+      # - uses: actions/setup-python@v5
+      #   with:
+      #     python-version: '3.10'
       - name: Run Builds
         run: |
           echo "::add-matcher::sources/nuttx/.github/gcc.json"
@@ -222,7 +223,7 @@ jobs:
 
   msys2:
     needs: Fetch-Source
-    runs-on: windows-latest
+    runs-on: [self-hosted, Windows]
     strategy:
       fail-fast: false
       matrix:
