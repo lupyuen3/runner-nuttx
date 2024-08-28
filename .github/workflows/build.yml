@@ -117,13 +117,14 @@ jobs:
 
   Linux:
     needs: Fetch-Source
-    runs-on: [self-hosted, Linux]
+    runs-on: [self-hosted, Linux, ARM64]
     env:
       DOCKER_BUILDKIT: 1
 
     strategy:
       matrix:
-        boards: [arm-01, arm-02, arm-03, arm-04, arm-05, arm-06, arm-07, arm-08, arm-09, arm-10, arm-11, arm-12, arm-13, other, risc-v-01, risc-v-02, sim-01, sim-02, xtensa-01, xtensa-02]
+        # boards: [arm-01, arm-02, arm-03, arm-04, arm-05, arm-06, arm-07, arm-08, arm-09, arm-10, arm-11, arm-12, arm-13, other, risc-v-01, risc-v-02, sim-01, sim-02, xtensa-01, xtensa-02]
+        boards: [sim-01, sim-02]
 
     steps:
       - name: Download Source Artifact
@@ -175,7 +176,7 @@ jobs:
   macOS:
     permissions:
       contents: none
-    runs-on: [self-hosted, macOS]
+    runs-on: [self-hosted, macOS, X64]
     needs: Fetch-Source
     strategy:
       matrix:
