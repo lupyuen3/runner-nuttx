@@ -25,12 +25,13 @@ permissions:
 
 jobs:
   build-html:
-    runs-on: [self-hosted, Linux, X64]
+    runs-on: [self-hosted, macOS, ARM64]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.8'
+      # TODO: This hangs on macOS Arm64
+      # - uses: actions/setup-python@v5
+      #   with:
+      #     python-version: '3.8'
       - name: Install LaTeX packages
         run: |
           sudo apt-get update -y
